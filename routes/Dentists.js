@@ -16,8 +16,8 @@ Dentist.getDentists(function(err,rows){
     });
 });
 
-router.get('/:OE',function(req,res,next){
-Dentist.getDentistsSorted(req.params.OE,function(err,rows){
+router.get('/:OE&&offset=:offset',function(req,res,next){
+Dentist.getDentistsSorted(req.params.OE, req.params.offset, function(err,rows){
         if(err)
         {
             res.json(err);
