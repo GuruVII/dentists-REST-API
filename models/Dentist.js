@@ -12,16 +12,36 @@ getDentistById:function(id,callback){
     return db.query("SELECT * FROM seznam WHERE id=?",[id],callback);
 },
 getDentistsSorted:function(oe, offset, maxAvg,sortColumn, orderBy, callback){
-	let selectedOE = oe.split("+");
 	// when adding new parameters to the query, don't forget to add them in the .js in the routes folder
+	let selectedOE = oe.split("+");
+	let offsetStart = offset-100;
+	let sortColumnSecured = "";
+	let orderBySecured = "ASC";
+	// security meassures to ensure no one puts anythign funny in the URL
+	switch (sortColumn){
+		case "id":
+			sortColumnSecured = "id";
+			break;
+		case "doseganje_povprecja":
+			sortColumnSecured = "doseganje_povprecja";
+			break;
+		case "naslov_izvajalca_drugi_del":
+			sortColumnSecured = "naslov_izvajalca_drugi_del"
+			break;
+		case "priimek_in_ime_zdravnika":
+			sortColumnSecured = "priimek_in_ime_zdravnika"
+			break;
+	}
+	if (orderBy == "DESC"){
+		orderBySecured = "DESC"
+	}
+
 	if (selectedOE == "all")
 		{
-			let searcParameters = `SELECT * FROM seznam WHERE id <= ${offset} AND id >= ${offset-100} AND doseganje_povprecja <= ${maxAvg} ORDER BY ${sortColumn} ${orderBy}`
-			return db.query(searcParameters,callback);
+			return db.query(`SELECT * FROM seznam WHERE id <= ? AND id >= ? AND doseganje_povprecja <= ? ORDER BY ${sortColumnSecured} ${orderBySecured}`,[offset, offsetStart, maxAvg],callback);
 		}
-	let searcParameters = `SELECT * FROM seznam WHERE sifra_oe in (${selectedOE}) AND id <= ${offset} and id >= ${offset-100} ORDER BY ${sortColumn} ${orderBy}`
 	console.log()
-	return db.query(`SELECT * FROM seznam WHERE sifra_oe in (${selectedOE}) AND id <= ${offset} and id >= ${offset-100} AND doseganje_povprecja <= ${maxAvg} ORDER BY ${sortColumn} ${orderBy}`, callback);
+	return db.query(`SELECT * FROM seznam WHERE sifra_oe in (?) AND id <= ? and id >= ? AND doseganje_povprecja <= ? ORDER BY ${sortColumnSecured} ${orderBySecured}`,[selectedOE, offset, offsetStart, maxAvg], callback);
 }
 };
 module.exports=Dentist;
