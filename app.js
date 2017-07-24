@@ -6,9 +6,6 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var cors=require('cors');
 var routes = require('./routes/index');
-var users = require('./routes/users');
-var Tasks=require('./routes/Tasks');
-var Students=require('./routes/Students');
 var Dentists=require('./routes/Dentists');
 var app = express();
 // view engine setup
@@ -28,9 +25,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 /*app.use('/resources',express.static(__dirname + '/images'));
 So now, you can use http://localhost:5000/resources/myImage.jpg to serve all the images instead of http://localhost:5000/images/myImage.jpg. */
 app.use('/', routes);
-app.use('/users', users);
-app.use('/Tasks',Tasks);
-app.use('/Students',Students);
 app.use('/Dentists',Dentists);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
