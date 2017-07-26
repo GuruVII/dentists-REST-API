@@ -15,7 +15,6 @@ Dentist.getDentists(function(err,rows){
  
     });
 });
-
 router.get('/:OE&offset=:offset&maxAvg=:maxAvg&type=:type&:sortColumn=:orderBy',function(req,res,next){
 Dentist.getDentistsSorted(req.params.OE, req.params.offset, req.params.maxAvg, req.params.type, req.params.sortColumn, req.params.orderBy, function(err,rows){
         if(err)
@@ -24,7 +23,7 @@ Dentist.getDentistsSorted(req.params.OE, req.params.offset, req.params.maxAvg, r
         }
         else
         {
-            res.json(rows);
+            res.json(JSON.stringify(rows));
         }
  
     });
