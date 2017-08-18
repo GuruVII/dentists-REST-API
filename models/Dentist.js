@@ -1,15 +1,13 @@
-var db=require('../dbconnection');
+const db = require('../dbconnection');
 
-var Dentist={
-
-    getDentists:function(callback){
-        return db.query('SELECT * FROM seznam',callback);
-
+let Dentist = {
+    getDentists:function (callback) {
+        return db.query('SELECT * FROM seznam', callback);
     },
-    getDentistById:function(id,callback){
-        return db.query('SELECT * FROM seznam WHERE id=?',[id],callback);
+    getDentistById: function (id, callback) {
+        return db.query('SELECT * FROM seznam WHERE id=?', [id], callback);
     },
-    getDentistsSorted:function(oe, offset, maxAvg,type,sortColumn, orderBy, callback){
+    getDentistsSorted: function (oe, offset, maxAvg, type, sortColumn, orderBy, callback) {
     // when adding new parameters to the query, don't forget to add them in the .js in the routes folder
         let selectedOE = oe.split('+');
         let dentistType = type.split('+');
@@ -17,7 +15,7 @@ var Dentist={
         let orderBySecured = 'ASC';
         let offsetInt = parseInt(offset);
         // security meassures to ensure no one puts anythign funny in the URL
-        switch (sortColumn){
+        switch (sortColumn) {
         case 'id':
             sortColumnSecured = 'id';
             break;
@@ -31,15 +29,13 @@ var Dentist={
             sortColumnSecured = 'priimek_in_ime_zdravnika';
             break;
         }
-        if (orderBy == 'DESC'){
+        if (orderBy == 'DESC') {
             orderBySecured = 'DESC';
         }
 
-        if (selectedOE == 'all')
-        {	
-            return db.query(`SELECT * FROM seznam WHERE doseganje_povprecja <= ? AND ZZZS_dejavnost IN (?) ORDER BY ${sortColumnSecured} ${orderBySecured} LIMIT  ${offsetInt}, 100`,[maxAvg, dentistType],callback);
+        if (selectedOE == 'all') {	
+            return db.query(`SELECT * FROM seznam WHERE doseganje_povprecja <= ? AND ZZZS_dejavnost IN (?) ORDER BY ${sortColumnSecured} ${orderBySecured} LIMIT  ${offsetInt}, 100`, [maxAvg, dentistType], callback);
         }
-		
         return db.query(`SELECT * FROM seznam WHERE sifra_oe in (?) AND doseganje_povprecja <= ? AND ZZZS_dejavnost IN (?) ORDER BY ${sortColumnSecured} ${orderBySecured} LIMIT ${offsetInt}, 100`,[selectedOE, maxAvg, dentistType], callback);
     }
 };
